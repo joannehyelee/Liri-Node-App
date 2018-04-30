@@ -49,8 +49,14 @@ function tweet() {
 
 
 function song() {
-    var songTitle = process.argv[3];
 
+    var songTitle = "";
+
+    if (!songTitle && process.argv.length < 4) {
+        songTitle = "A Whole New World";
+    } else if (process.argv.length > 3) {
+        var songTitle = process.argv[3];
+    }
 
     spotify.search({ type: 'track', query: songTitle, limit: 1}, function(error, data){
         if (!error) {
@@ -60,13 +66,6 @@ function song() {
             console.log("Song: " + data.tracks.items[0].name);
             console.log("Preview link: " + data.tracks.items[0].preview_url);
             console.log("Album: " + data.tracks.items[0].album.name);
-            console.log("--------------------------------------");
-        } else {
-            songTitle = 'The Sign';
-            console.log("--------------------------------------");
-            console.log("Artist(s): Ace of Base");
-            console.log("Song: The Sign");
-            console.log("Album: The Sign");
             console.log("--------------------------------------");
         }
     });
