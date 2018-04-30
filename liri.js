@@ -5,6 +5,7 @@ var Spotify = require('node-spotify-api');
 var request = require("request");
 
 var command = process.argv[2];
+var nodeArgs = process.argv;
 
 var client = new Twitter(keys.twitter);
 var spotify = new Spotify(keys.spotify);
@@ -57,6 +58,34 @@ else if (command === "spotify-this-song") {
 }
 else if (command === "movie-this") {
 
+    var movieName = "";
+
+    for (var i = 3; i < nodeArgs.length; i++) {
+        if (i > 3 && i < nodeArgs.length) {
+            movieName = movieName + "+" + nodeArgs[i];
+        } else {
+            movieName += nodeArgs[i];
+        }
+    }
+
+    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+
+    request(queryUrl, function(error, response, body){
+        if (!error && response.statusCode === 200) {
+            console.log("--------------------------------------");
+            console.log("Title: " + JSON.parse(body).Title);
+            console.log("Year: " + JSON.parse(body).Year);
+            console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
+            console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
+            console.log("Country: " + JSON.parse(body).Country);
+            console.log("Language: " + JSON.parse(body).Language);
+            console.log("Plot: " + JSON.parse(body).Plot);
+            console.log("Actors: " + JSON.parse(body).Actors);
+        } else {
+            
+        }
+    });
+
 }
 else if (command === "do-what-it-says") {
 
@@ -64,23 +93,3 @@ else if (command === "do-what-it-says") {
 else {
 
 }
-
-
-
-// var tweetsUrl = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=joannehyelee&count=2";
-
-// console.log(tweetsUrl);
-
-// request(tweetsUrl, function(error, response, body){
-//     if (!error && response.statusCode === 200) {
-//         console.log('YAY');
-//     } else {
-//         console.log(error);
-//     }
-// });
-
-// if (command === "my-tweets") {
-//     keys.client.get('search/tweets', {q: 'node.js'}, function(error, tweets, response) {
-//         console.log(tweets);
-//     });
-// }
